@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ichat</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background-color: rgb(216, 184, 247);
+      }
+      h1 {
+        margin-left: 30vw;
+      }
+      #box {
+        width: 90vw;
+        height: 80vh;
+        border: 1px solid black;
+        margin-left: 4vw;
+        box-shadow: 1px 1px 15px 1px black;
+        background-color: rgb(255, 250, 230);
+        overflow-y: scroll;
+        border-radius: 3vh;
+      }
+      #box::-webkit-scrollbar {
+        display: none;
+      }
+      .left {
+        color: black;
+        background-color: white;
+        font-weight: 550;
+        width: 60vw;
+        height: fit-content;
+        padding: 1%;
+        margin: 1%;
+        border-radius: 4vh;
+      }
+      .right {
+        color: black;
+        background-color: rgb(193, 243, 118);
+        width: fit-content;
+        font-weight: 550;
+        width: 60vw;
+        height: fit-content;
+        padding: 1%;
+        margin: 1%;
+        border-radius: 4vh;
+        margin-left: auto;
+      }
+      #inp {
+        width: 90%;
+        height: 9vh;
+        outline-width: 0;
+        margin-left: 4vw;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 128, 0, 0);
+        font-size: large;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Welcome To Ichat Group</h1>
+    <div id="box"></div>
+    <div id="sendbox">
+      <input type="text" id="inp" placeholder="Type a message..." />
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      let box = document.getElementById("box");
+      let inp = document.getElementById("inp");
+      let btn = document.getElementById("btn");
+
+      inp.addEventListener("keyup", (e) => {
+        console.log(e);
+        if (e.keyCode == 13) {
+          sendmsg(inp.value);
+          inp.value = "";
+        }
+      });
+      function sendmsg(msg) {
+        appendmsg(msg, "right");
+        socket.emit("message", msg);
+      }
+      function appendmsg(msg, type) {
+        let div = document.createElement("div");
+        div.classList.add(type);
+        div.innerText = msg;
+        let box = document.getElementById("box");
+        box.appendChild(div);
+      }
+      socket.on("message", (msg) => {
+        appendmsg(msg, "left");
+      });
+    </script>
+  </body>
+</html>
