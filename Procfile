@@ -1,0 +1,1 @@
+web: node project/indsrc/index.js
